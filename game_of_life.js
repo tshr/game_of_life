@@ -69,7 +69,7 @@ function createRaphaelGrid() {
 }
 
 function createRaphaelCell(row, column, height, width) {
-	var cell = CONWAY.paper.rect(column*width, row*height, width, height);
+	var cell = CONWAY.paper.rect(column * width, row * height, width, height);
 
 	cell.attr({stroke:"#d8d8d8"});
 	cell.node.id = 'cell_' + row + "_" + column;
@@ -77,7 +77,7 @@ function createRaphaelCell(row, column, height, width) {
 	cell.data("column", column);
 	cell.click(function () {
 		var cell_data = CONWAY.world[this.data("row")][this.data("column")];
-    	cell_data.alive = cell_data.alive === true ? false : true;
+    	cell_data.alive = !(cell_data.alive === true);
 		if (cell_data.alive) {
 			this.attr({fill: CONWAY.alive_color});
 		} else {
@@ -177,7 +177,7 @@ function calculateIfCellAlive(row, column) {
 		if (count <= 3) return true;
 		if (count > 3) return false;
 	} else {
-		return (count === 3) ? true : false;
+		return (count === 3);
 	}
 
 	function countNeighbors() {
