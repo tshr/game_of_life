@@ -1,0 +1,17 @@
+<!DOCTYPE html >
+<html>
+  <head>
+    <title>Game of Life</title>
+    <link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css' />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="raphael-min.js"></script>
+    <script src="game_of_life.js"></script>
+    <script>$(function() { initAndRunConway() })</script> 
+  </head>
+  <body>
+    <div id="description">
+      <a href="http://en.wikipedia.org/wiki/Conway\'s_Game_of_Life">Conway's Game of Life</a> implemented with javascript and <a href="http://raphaeljs.com">raphael.js</a>. Press "p" to pause/unpause the simulation, and click a cell to toggle it on or off (it will immediately die while the simulation is running if it isn't adjacent to any other alive cells). Reloading the page will reset the game to its initial configuration. (<a href="game_of_life.js">Source</a>)
+    </div>
+    <div id="canvas"></div>
+  </body>
+</html>
