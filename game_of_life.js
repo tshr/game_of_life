@@ -1,3 +1,5 @@
+/* Toshiro Ken Sugihara 2012 */
+
 // Crockford's object creation method
 
 function setupObjectCreationMethod(){
@@ -77,7 +79,7 @@ function createRaphaelCell(row, column, height, width) {
   cell.data("column", column);
   cell.click(function () {
     var cell_data = CONWAY.world[this.data("row")][this.data("column")];
-      cell_data.alive = !(cell_data.alive === true);
+      cell_data.alive = !cell_data.alive;
     if (cell_data.alive) {
       this.attr({fill: CONWAY.alive_color});
     } else {
@@ -183,36 +185,26 @@ function calculateIfCellAlive(row, column) {
   function countNeighbors() {
     var count = 0;
 
-    count += CONWAY.world[wrappedRow(row - 1)][wrappedColumn(column - 1)].alive ? 1 : 0;
-    count += CONWAY.world[wrappedRow(row - 1)][column].alive ? 1 : 0;
-    count += CONWAY.world[wrappedRow(row - 1)][wrappedColumn(column + 1)].alive ? 1 : 0;
-    count += CONWAY.world[wrappedRow(row + 1)][wrappedColumn(column - 1)].alive ? 1 : 0;
-    count += CONWAY.world[wrappedRow(row + 1)][column].alive ? 1 : 0;
-    count += CONWAY.world[wrappedRow(row + 1)][wrappedColumn(column + 1)].alive ? 1 : 0;
-    count += CONWAY.world[row][wrappedColumn(column - 1)].alive ? 1 : 0;
-    count += CONWAY.world[row][wrappedColumn(column + 1)].alive ? 1 : 0;
+    count += CONWAY.world[wrapped(row - 1, CONWAY.num_rows)][wrapped(column - 1, CONWAY.num_columns)].alive ? 1 : 0;
+    count += CONWAY.world[wrapped(row - 1, CONWAY.num_rows)][column].alive ? 1 : 0;
+    count += CONWAY.world[wrapped(row - 1, CONWAY.num_rows)][wrapped(column + 1, CONWAY.num_columns)].alive ? 1 : 0;
+    count += CONWAY.world[wrapped(row + 1, CONWAY.num_rows)][wrapped(column - 1, CONWAY.num_columns)].alive ? 1 : 0;
+    count += CONWAY.world[wrapped(row + 1, CONWAY.num_rows)][column].alive ? 1 : 0;
+    count += CONWAY.world[wrapped(row + 1, CONWAY.num_rows)][wrapped(column + 1, CONWAY.num_columns)].alive ? 1 : 0;
+    count += CONWAY.world[row][wrapped(column - 1, CONWAY.num_columns)].alive ? 1 : 0;
+    count += CONWAY.world[row][wrapped(column + 1, CONWAY.num_columns)].alive ? 1 : 0;
 
     return count;
   }
 }
 
-function wrappedRow(row) {
-  if (row < 0) {
-    return CONWAY.num_rows - 1
-  } else if (row >= CONWAY.num_rows) {
+function wrapped(point, dimension_size) {
+  if (point < 0) {
+    return dimension_size - 1
+  } else if (point >= dimension_size) {
     return 0;
   } else {
-    return row;
-  }
-}
-
-function wrappedColumn(column) {
-  if (column < 0) {
-    return CONWAY.num_columns - 1
-  } else if (column >= CONWAY.num_columns) {
-    return 0;
-  } else {
-    return column;
+    return point;
   }
 }
 
