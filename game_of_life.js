@@ -190,8 +190,9 @@ function calculateIfCellAlive(row, column) {
     rel_positions.forEach(function(row_position) {
         rel_positions.forEach(function(column_position) {
         if (!(row_position === 0 && column_position === 0)) {
-          count += CONWAY.world[wrapped(row + row_position, CONWAY.num_rows)]
-          [wrapped(column + column_position, CONWAY.num_columns)].alive ? 1 : 0;
+          var cell_row = wrapped(row + row_position, CONWAY.num_rows);
+          var cell_column = wrapped(column + column_position, CONWAY.num_columns);
+          count += CONWAY.world[cell_row][cell_column].alive ? 1 : 0;
         }
       });
     });
