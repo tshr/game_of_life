@@ -183,16 +183,18 @@ function calculateIfCellAlive(row, column) {
   }
 
   function countNeighbors() {
+
     var count = 0;
 
-    count += CONWAY.world[wrapped(row - 1, CONWAY.num_rows)][wrapped(column - 1, CONWAY.num_columns)].alive ? 1 : 0;
-    count += CONWAY.world[wrapped(row - 1, CONWAY.num_rows)][column].alive ? 1 : 0;
-    count += CONWAY.world[wrapped(row - 1, CONWAY.num_rows)][wrapped(column + 1, CONWAY.num_columns)].alive ? 1 : 0;
-    count += CONWAY.world[wrapped(row + 1, CONWAY.num_rows)][wrapped(column - 1, CONWAY.num_columns)].alive ? 1 : 0;
-    count += CONWAY.world[wrapped(row + 1, CONWAY.num_rows)][column].alive ? 1 : 0;
-    count += CONWAY.world[wrapped(row + 1, CONWAY.num_rows)][wrapped(column + 1, CONWAY.num_columns)].alive ? 1 : 0;
-    count += CONWAY.world[row][wrapped(column - 1, CONWAY.num_columns)].alive ? 1 : 0;
-    count += CONWAY.world[row][wrapped(column + 1, CONWAY.num_columns)].alive ? 1 : 0;
+    var rel_positions = [-1, 0, 1];
+    rel_positions.forEach(function(row_position) {
+        rel_positions.forEach(function(column_position) {
+        if (!(row_position === 0 && column_position === 0)) {
+          count += CONWAY.world[wrapped(row + row_position, CONWAY.num_rows)]
+          [wrapped(column + column_position, CONWAY.num_columns)].alive ? 1 : 0;
+        }
+      });
+    });
 
     return count;
   }
