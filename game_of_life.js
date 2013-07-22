@@ -41,14 +41,14 @@ Toshiro Ken Sugihara 2013
         }
       };
       world.draw = function() {
-        var c, r, _i, _results;
+        var j, k, _i, _results;
         _results = [];
-        for (r = _i = 0; 0 <= num_rows ? _i < num_rows : _i > num_rows; r = 0 <= num_rows ? ++_i : --_i) {
+        for (j = _i = 0; 0 <= num_rows ? _i < num_rows : _i > num_rows; j = 0 <= num_rows ? ++_i : --_i) {
           _results.push((function() {
             var _j, _results1;
             _results1 = [];
-            for (c = _j = 0; 0 <= num_columns ? _j < num_columns : _j > num_columns; c = 0 <= num_columns ? ++_j : --_j) {
-              _results1.push(this.drawCell(r, c, world[r][c].alive));
+            for (k = _j = 0; 0 <= num_columns ? _j < num_columns : _j > num_columns; k = 0 <= num_columns ? ++_j : --_j) {
+              _results1.push(this.drawCell(j, k, world[j][k].alive));
             }
             return _results1;
           }).call(this));

@@ -29,9 +29,9 @@ $ ->
       if alive then cell.attr fill: alive_color else cell.attr fill: "#ffffff"
 
     world.draw = ->
-      for r in [0...num_rows]
-        for c in [0...num_columns]
-          @drawCell(r, c, world[r][c].alive)
+      for j in [0...num_rows]
+        for k in [0...num_columns]
+          @drawCell(j, k, world[j][k].alive)
 
     createRaphaelCell = (row, column, height, width) ->
       cell = paper.rect(column * width, row * height, width, height)
@@ -51,8 +51,7 @@ $ ->
       grid_cell_width = canvas_width / num_columns
 
       for j in [0...num_rows]
-        for k in [0...num_columns]
-          createRaphaelCell j, k, grid_cell_height, grid_cell_width
+        createRaphaelCell j, k, grid_cell_height, grid_cell_width for k in [0...num_columns]
 
   populateWorld = ->
 
@@ -101,8 +100,7 @@ $ ->
 
     for j in [0...world.length]
       arr = []
-      for k in [0...world[j].length]
-        arr.push calculateIfCellAlive(j, k)
+      arr.push calculateIfCellAlive(j, k) for k in [0...world[j].length]
       grid.push arr
 
     grid
@@ -111,8 +109,7 @@ $ ->
 
     for j in [0...results_grid.length]
       arr = []
-      for k in [0...results_grid[j].length]
-        world[j][k].alive = results_grid[j][k]
+      world[j][k].alive = results_grid[j][k] for k in [0...results_grid[j].length]
 
   updateWorld = ->
     world.draw()
@@ -137,3 +134,8 @@ $ ->
     updateWorld()
     unless paused
       setTimeout runWorld, tick_interval
+
+# turn world into a class with constructor
+# make updateCells a method on world
+# move event key press listener into own function
+# turn cell matchers to be based on data attribute instead of id name
