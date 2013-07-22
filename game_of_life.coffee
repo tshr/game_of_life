@@ -29,9 +29,7 @@ $ ->
       if alive then cell.attr fill: alive_color else cell.attr fill: "#ffffff"
 
     world.draw = ->
-      for j in [0...num_rows]
-        for k in [0...num_columns]
-          @drawCell(j, k, world[j][k].alive)
+      @drawCell(j, k, world[j][k].alive) for k in [0...num_columns] for j in [0...num_rows]
 
     createRaphaelCell = (row, column, height, width) ->
       cell = paper.rect(column * width, row * height, width, height)
