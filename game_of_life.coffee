@@ -1,39 +1,32 @@
+###
+Toshiro Ken Sugihara 2013
+###
+
 $ ->
+
+  ### Variables ###
+
   num_rows = 30
   num_columns = 48
   canvas_width = 480
   canvas_height = 300
   paused = false
+  tick_interval = 50
   paper = Raphael("canvas", canvas_width, canvas_height)
   alive_color = "#50c0a8"
   world = []
 
-  # Set up pause listener
-  $(window).keydown (event) ->
-    if event.keyCode is 80
-      if paused
-        paused = !paused
-        runWorld()
-      else
-        paused = !paused
+  ### Functions ###
 
   generateWorld = ->
-    for i in [0...num_rows]
-      row = []
-      row.push({ alive : false }) for [0...num_columns]
-      world.push(row)
 
     world.getCellByCoord = (row, column) ->
       cell_id_string = "cell_" + row + "_" + column
-      $ "#" + cell_id_string
+      $("#" + cell_id_string)
 
     world.drawCell = (row, column, alive) ->
-
       cell = @getCellByCoord(row, column)
-      if alive
-        cell.attr fill: alive_color
-      else
-        cell.attr fill: "#ffffff"
+      if alive then cell.attr fill: alive_color else cell.attr fill: "#ffffff"
 
     world.draw = ->
       for r in [0...num_rows]
@@ -42,17 +35,16 @@ $ ->
 
     createRaphaelCell = (row, column, height, width) ->
       cell = paper.rect(column * width, row * height, width, height)
-      cell.attr stroke: "#d8d8d8"
       cell.node.id = "cell_" + row + "_" + column
-      cell.data "row", row
-      cell.data "column", column
-      cell.click ->
+      cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
         cell_data = world[@data("row")][@data("column")]
         cell_data.alive = !cell_data.alive
-        if cell_data.alive
-          @attr fill: alive_color
-        else
-          @attr fill: "#ffffff"
+        if cell_data.alive then @attr fill: alive_color else @attr fill: "#ffffff"
+
+    for i in [0...num_rows]
+      row = []
+      row.push({ alive : false }) for [0...num_columns]
+      world.push(row)
 
     do createRaphaelGrid = ->
       grid_cell_height = canvas_height / num_rows
@@ -64,7 +56,7 @@ $ ->
 
   populateWorld = ->
 
-    #GLIDER 1
+    #GLIDER
     world[0][8].alive = true
     world[1][9].alive = true
     world[2][9].alive = true
@@ -83,18 +75,17 @@ $ ->
   calculateIfCellAlive = (row, column) ->
 
     wrapped = (point, dimension_size) ->
-      if point < 0
-        dimension_size - 1
-      else if point >= dimension_size
-        0
-      else
-        point
+      switch
+        when (point < 0) then dimension_size - 1
+        when (point >= dimension_size) then 0
+        else point
 
     countNeighbors = ->
       count = 0
       rel_positions = [-1, 0, 1]
-      rel_positions.forEach (row_position) ->
-        rel_positions.forEach (column_position) ->
+
+      for row_position in rel_positions
+        for column_position in rel_positions
           unless row_position is 0 and column_position is 0
             cell_row = wrapped(row + row_position, num_rows)
             cell_column = wrapped(column + column_position, num_columns)
@@ -102,12 +93,7 @@ $ ->
       count
 
     count = countNeighbors()
-    if world[row][column].alive
-      return false  if count < 2
-      return true  if count <= 3
-      return false  if count > 3
-    else
-      return (count is 3)
+    if world[row][column].alive then (2 <= count <= 3) else (count == 3)
 
   determineNextGenerationCellStates = ->
 
@@ -133,10 +119,21 @@ $ ->
     results_grid = determineNextGenerationCellStates()
     updateCells(results_grid)
 
+  ### Main ###
+
+  # Set up pause listener on the "p" key
+  $(window).keydown (event) ->
+    if event.keyCode is 80
+      if paused
+        paused = !paused
+        runWorld()
+      else
+        paused = !paused
+
   generateWorld()
   populateWorld()
 
   do runWorld = ->
     updateWorld()
     unless paused
-      setTimeout runWorld, 50
+      setTimeout runWorld, tick_interval
