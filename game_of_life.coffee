@@ -20,18 +20,10 @@ $ ->
 
   class World
 
-    constructor: (num_rows, num_columns, canvas_width, canvas_height) ->
+    constructor: (paper, num_rows, num_columns, canvas_width, canvas_height, alive_color) ->
       @grid = []
       grid_cell_height = canvas_height / num_rows
       grid_cell_width = canvas_width / num_columns
-
-      createRaphaelCell = (row, column, height, width) ->
-        cell = paper.rect(column * width, row * height, width, height)
-        cell.node.id = "cell_" + row + "_" + column
-        cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
-          cell_data = world.grid[@data("row")][@data("column")]
-          cell_data.alive = !cell_data.alive
-          if cell_data.alive then @attr fill: alive_color else @attr fill: "#ffffff"
 
       for i in [0...num_rows]
         row = []
@@ -39,7 +31,15 @@ $ ->
         @grid.push(row)
 
       for j in [0...num_rows]
-        createRaphaelCell j, k, grid_cell_height, grid_cell_width for k in [0...num_columns]
+        @createRaphaelCell j, k, grid_cell_height, grid_cell_width for k in [0...num_columns]
+
+    createRaphaelCell: (row, column, height, width) ->
+      cell = paper.rect(column * width, row * height, width, height)
+      cell.node.id = "cell_" + row + "_" + column
+      cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
+        cell_data = world.grid[@data("row")][@data("column")]
+        cell_data.alive = !cell_data.alive
+        if cell_data.alive then @attr fill: alive_color else @attr fill: "#ffffff"
 
     getCellByCoord: (row, column) ->
       cell_id_string = "cell_" + row + "_" + column
@@ -127,7 +127,7 @@ $ ->
   ### Main ###
 
   setPauseListener()
-  world = new World num_rows, num_columns, canvas_width, canvas_height
+  world = new World paper, num_rows, num_columns, canvas_width, canvas_height, alive_color
   populateWorld()
 
   do runWorld = ->
