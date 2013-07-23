@@ -20,7 +20,7 @@ $ ->
 
   class World
 
-    constructor: (paper, num_rows, num_columns, canvas_width, canvas_height, alive_color) ->
+    constructor: ->
       @grid = []
       grid_cell_height = canvas_height / num_rows
       grid_cell_width = canvas_width / num_columns
@@ -127,7 +127,7 @@ $ ->
   ### Main ###
 
   setPauseListener()
-  world = new World paper, num_rows, num_columns, canvas_width, canvas_height, alive_color
+  world = new World
   populateWorld()
 
   do runWorld = ->

@@ -21,7 +21,7 @@ Toshiro Ken Sugihara 2013
     /* Classes*/
 
     World = (function() {
-      function World(paper, num_rows, num_columns, canvas_width, canvas_height, alive_color) {
+      function World() {
         var grid_cell_height, grid_cell_width, i, j, k, row, _i, _j, _k, _l;
         this.grid = [];
         grid_cell_height = canvas_height / num_rows;
@@ -203,7 +203,7 @@ Toshiro Ken Sugihara 2013
     /* Main*/
 
     setPauseListener();
-    world = new World(paper, num_rows, num_columns, canvas_width, canvas_height, alive_color);
+    world = new World;
     populateWorld();
     return (runWorld = function() {
       updateWorld();
