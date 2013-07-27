@@ -4,37 +4,33 @@ Toshiro Ken Sugihara 2013
 
 $ ->
 
-  ### Variables ###
-
-  num_rows = 30
-  num_columns = 48
-  canvas_width = 480
-  canvas_height = 300
-  paused = false
   tick_interval = 50
-  paper = Raphael("canvas", canvas_width, canvas_height)
-  alive_color = "#50c0a8"
-  world = null
-
-  ### Classes ###
+  paused = false
 
   class World
 
-    constructor: ->
-      @grid = []
-      grid_cell_height = canvas_height / num_rows
-      grid_cell_width = canvas_width / num_columns
+    constructor: (num_rows, num_columns, canvas_height, canvas_width, alive_color)->
 
-      for i in [0...num_rows]
+      @num_rows = num_rows
+      @num_columns = num_columns
+      @canvas_height = canvas_height
+      @canvas_width = canvas_width
+      @alive_color = alive_color
+      @grid = []
+      @paper = Raphael("canvas", @canvas_width, @canvas_height)
+      grid_cell_height = @canvas_height / @num_rows
+      grid_cell_width = @canvas_width / @num_columns
+
+      for i in [0...@num_rows]
         row = []
-        row.push({ alive : false }) for [0...num_columns]
+        row.push({ alive : false }) for [0...@num_columns]
         @grid.push(row)
 
-      for j in [0...num_rows]
-        @createRaphaelCell j, k, grid_cell_height, grid_cell_width for k in [0...num_columns]
+      for j in [0...@num_rows]
+        @createRaphaelCell j, k, grid_cell_height, grid_cell_width, @alive_color for k in [0...@num_columns]
 
-    createRaphaelCell: (row, column, height, width) ->
-      cell = paper.rect(column * width, row * height, width, height)
+    createRaphaelCell: (row, column, height, width, alive_color) ->
+      cell = @paper.rect(column * width, row * height, width, height)
       cell.node.id = "cell_" + row + "_" + column
       cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
         cell_data = world.grid[@data("row")][@data("column")]
@@ -47,17 +43,15 @@ $ ->
 
     drawCell: (row, column, alive) ->
       cell = @getCellByCoord(row, column)
-      if alive then cell.attr fill: alive_color else cell.attr fill: "#ffffff"
+      if alive then cell.attr fill: @alive_color else cell.attr fill: "#ffffff"
 
     draw: ->
-      @drawCell(j, k, world.grid[j][k].alive) for k in [0...num_columns] for j in [0...num_rows]
+      @drawCell(j, k, world.grid[j][k].alive) for k in [0...@num_columns] for j in [0...@num_rows]
 
     updateCells: (results_grid) ->
       for j in [0...results_grid.length]
         arr = []
         world.grid[j][k].alive = results_grid[j][k] for k in [0...results_grid[j].length]
-
-  ### Functions ###
 
   populateWorld = ->
 
@@ -92,8 +86,8 @@ $ ->
       for row_position in rel_positions
         for column_position in rel_positions
           unless row_position is 0 and column_position is 0
-            cell_row = wrapped(row + row_position, num_rows)
-            cell_column = wrapped(column + column_position, num_columns)
+            cell_row = wrapped(row + row_position, world.num_rows)
+            cell_column = wrapped(column + column_position, world.num_columns)
             count += (if world.grid[cell_row][cell_column].alive then 1 else 0)
       count
 
@@ -127,7 +121,8 @@ $ ->
   ### Main ###
 
   setPauseListener()
-  world = new World
+
+  world = new World(30, 48, 300, 480, "#50c0a8")
   populateWorld()
 
   do runWorld = ->
