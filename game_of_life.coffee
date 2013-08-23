@@ -9,7 +9,7 @@ $ ->
 
   class World
 
-    constructor: (num_rows, num_columns, canvas_height, canvas_width, alive_color)->
+    constructor: (num_rows, num_columns, canvas_height, canvas_width, alive_color) ->
 
       @num_rows = num_rows
       @num_columns = num_columns
@@ -23,11 +23,13 @@ $ ->
 
       for i in [0...@num_rows]
         row = []
-        row.push({ alive : false }) for [0...@num_columns]
+        for [0...@num_columns]
+          row.push({ alive : false })
         @grid.push(row)
 
       for j in [0...@num_rows]
-        @createRaphaelCell j, k, grid_cell_height, grid_cell_width, @alive_color for k in [0...@num_columns]
+        for k in [0...@num_columns]
+          @createRaphaelCell j, k, grid_cell_height, grid_cell_width, @alive_color
 
     createRaphaelCell: (row, column, height, width, alive_color) ->
       cell = @paper.rect(column * width, row * height, width, height)
@@ -35,7 +37,7 @@ $ ->
       cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
         cell_data = world.grid[@data("row")][@data("column")]
         cell_data.alive = !cell_data.alive
-        if cell_data.alive then @attr fill: alive_color else @attr fill: "#ffffff"
+        @colorCell(@, cell_data.alive)
 
     getCellByCoord: (row, column) ->
       cell_id_string = "cell_" + row + "_" + column
@@ -43,15 +45,21 @@ $ ->
 
     drawCell: (row, column, alive) ->
       cell = @getCellByCoord(row, column)
+      @colorCell(cell, alive)
+
+    colorCell: (cell, alive) ->
       if alive then cell.attr fill: @alive_color else cell.attr fill: "#ffffff"
 
     draw: ->
-      @drawCell(j, k, world.grid[j][k].alive) for k in [0...@num_columns] for j in [0...@num_rows]
+      for j in [0...@num_rows]
+        for k in [0...@num_columns]
+          @drawCell(j, k, world.grid[j][k].alive)
 
     updateCells: (results_grid) ->
       for j in [0...results_grid.length]
         arr = []
-        world.grid[j][k].alive = results_grid[j][k] for k in [0...results_grid[j].length]
+        for k in [0...results_grid[j].length]
+          world.grid[j][k].alive = results_grid[j][k]
 
   populateWorld = ->
 
@@ -100,7 +108,8 @@ $ ->
 
     for j in [0...world.grid.length]
       arr = []
-      arr.push calculateIfCellAlive(j, k) for k in [0...world.grid[j].length]
+      for k in [0...world.grid[j].length]
+        arr.push calculateIfCellAlive(j, k)
       next_gen_grid.push arr
 
     next_gen_grid

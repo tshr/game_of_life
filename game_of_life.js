@@ -47,15 +47,7 @@ Toshiro Ken Sugihara 2013
           var cell_data;
           cell_data = world.grid[this.data("row")][this.data("column")];
           cell_data.alive = !cell_data.alive;
-          if (cell_data.alive) {
-            return this.attr({
-              fill: alive_color
-            });
-          } else {
-            return this.attr({
-              fill: "#ffffff"
-            });
-          }
+          return this.colorCell(this, cell_data.alive);
         });
       };
 
@@ -68,6 +60,10 @@ Toshiro Ken Sugihara 2013
       World.prototype.drawCell = function(row, column, alive) {
         var cell;
         cell = this.getCellByCoord(row, column);
+        return this.colorCell(cell, alive);
+      };
+
+      World.prototype.colorCell = function(cell, alive) {
         if (alive) {
           return cell.attr({
             fill: this.alive_color
