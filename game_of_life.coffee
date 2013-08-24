@@ -16,7 +16,7 @@ $ ->
       @alive_color = alive_color
       @grid = []
       @fillGrid()
-      @createRaphaelCells(canvas_width, canvas_height)
+      @createCells(canvas_width, canvas_height)
 
     fillGrid: ->
       for i in [0...@num_rows]
@@ -25,23 +25,22 @@ $ ->
           row.push({ alive : false })
         @grid.push(row)
 
-    createRaphaelCells: (canvas_width, canvas_height) ->
+    createCells: (canvas_width, canvas_height) ->
       paper = Raphael("canvas", canvas_width, canvas_height)
       grid_cell_height = canvas_height / @num_rows
       grid_cell_width = canvas_width / @num_columns
 
+      createCell = (paper, row, column, height, width, world) ->
+        cell = paper.rect(column * width, row * height, width, height)
+        cell.node.id = "cell_" + row + "_" + column
+        cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
+          cell_data = world.grid[@data("row")][@data("column")]
+          cell_data.alive = !cell_data.alive
+          world.colorCell(@, cell_data.alive)
+
       for j in [0...@num_rows]
         for k in [0...@num_columns]
-          @createRaphaelCell paper, j, k, grid_cell_height, grid_cell_width
-
-    createRaphaelCell: (paper, row, column, height, width) ->
-      cell = paper.rect(column * width, row * height, width, height)
-      cell.node.id = "cell_" + row + "_" + column
-      world = this
-      cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
-        cell_data = world.grid[@data("row")][@data("column")]
-        cell_data.alive = !cell_data.alive
-        world.colorCell(@, cell_data.alive)
+          createCell(paper, j, k, grid_cell_height, grid_cell_width, @)
 
     getCellByCoord: (row, column) ->
       cell_id_string = "cell_" + row + "_" + column
@@ -59,7 +58,7 @@ $ ->
         for k in [0...@num_columns]
           @drawCell(j, k, world.grid[j][k].alive)
 
-    updateCells: (results_grid) ->
+    updateGrid: (results_grid) ->
       for j in [0...results_grid.length]
         arr = []
         for k in [0...results_grid[j].length]
@@ -120,7 +119,7 @@ $ ->
 
   updateWorld = ->
     world.draw()
-    world.updateCells(getNextGenerationCellStates())
+    world.updateGrid(getNextGenerationCellStates())
 
   setPauseListener = ->
     $(window).keydown (event) ->
