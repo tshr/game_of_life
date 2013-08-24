@@ -13,31 +13,35 @@ $ ->
 
       @num_rows = num_rows
       @num_columns = num_columns
-      @canvas_height = canvas_height
-      @canvas_width = canvas_width
       @alive_color = alive_color
       @grid = []
-      @paper = Raphael("canvas", @canvas_width, @canvas_height)
-      grid_cell_height = @canvas_height / @num_rows
-      grid_cell_width = @canvas_width / @num_columns
+      @fillGrid()
+      @createRaphaelCells(canvas_width, canvas_height)
 
+    fillGrid: ->
       for i in [0...@num_rows]
         row = []
         for [0...@num_columns]
           row.push({ alive : false })
         @grid.push(row)
 
+    createRaphaelCells: (canvas_width, canvas_height) ->
+      paper = Raphael("canvas", canvas_width, canvas_height)
+      grid_cell_height = canvas_height / @num_rows
+      grid_cell_width = canvas_width / @num_columns
+
       for j in [0...@num_rows]
         for k in [0...@num_columns]
-          @createRaphaelCell j, k, grid_cell_height, grid_cell_width, @alive_color
+          @createRaphaelCell paper, j, k, grid_cell_height, grid_cell_width
 
-    createRaphaelCell: (row, column, height, width, alive_color) ->
-      cell = @paper.rect(column * width, row * height, width, height)
+    createRaphaelCell: (paper, row, column, height, width) ->
+      cell = paper.rect(column * width, row * height, width, height)
       cell.node.id = "cell_" + row + "_" + column
+      world = this
       cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
         cell_data = world.grid[@data("row")][@data("column")]
         cell_data.alive = !cell_data.alive
-        @colorCell(@, cell_data.alive)
+        world.colorCell(@, cell_data.alive)
 
     getCellByCoord: (row, column) ->
       cell_id_string = "cell_" + row + "_" + column

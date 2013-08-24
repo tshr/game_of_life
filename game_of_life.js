@@ -11,16 +11,17 @@ Toshiro Ken Sugihara 2013
     paused = false;
     World = (function() {
       function World(num_rows, num_columns, canvas_height, canvas_width, alive_color) {
-        var grid_cell_height, grid_cell_width, i, j, k, row, _i, _j, _k, _l, _ref, _ref1, _ref2, _ref3;
         this.num_rows = num_rows;
         this.num_columns = num_columns;
-        this.canvas_height = canvas_height;
-        this.canvas_width = canvas_width;
         this.alive_color = alive_color;
         this.grid = [];
-        this.paper = Raphael("canvas", this.canvas_width, this.canvas_height);
-        grid_cell_height = this.canvas_height / this.num_rows;
-        grid_cell_width = this.canvas_width / this.num_columns;
+        this.fillGrid();
+        this.createRaphaelCells(canvas_width, canvas_height);
+      }
+
+      World.prototype.fillGrid = function() {
+        var i, row, _i, _j, _ref, _ref1, _results;
+        _results = [];
         for (i = _i = 0, _ref = this.num_rows; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
           row = [];
           for (_j = 0, _ref1 = this.num_columns; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; 0 <= _ref1 ? _j++ : _j--) {
@@ -28,26 +29,42 @@ Toshiro Ken Sugihara 2013
               alive: false
             });
           }
-          this.grid.push(row);
+          _results.push(this.grid.push(row));
         }
-        for (j = _k = 0, _ref2 = this.num_rows; 0 <= _ref2 ? _k < _ref2 : _k > _ref2; j = 0 <= _ref2 ? ++_k : --_k) {
-          for (k = _l = 0, _ref3 = this.num_columns; 0 <= _ref3 ? _l < _ref3 : _l > _ref3; k = 0 <= _ref3 ? ++_l : --_l) {
-            this.createRaphaelCell(j, k, grid_cell_height, grid_cell_width, this.alive_color);
-          }
-        }
-      }
+        return _results;
+      };
 
-      World.prototype.createRaphaelCell = function(row, column, height, width, alive_color) {
-        var cell;
-        cell = this.paper.rect(column * width, row * height, width, height);
+      World.prototype.createRaphaelCells = function(canvas_width, canvas_height) {
+        var grid_cell_height, grid_cell_width, j, k, paper, _i, _ref, _results;
+        paper = Raphael("canvas", canvas_width, canvas_height);
+        grid_cell_height = canvas_height / this.num_rows;
+        grid_cell_width = canvas_width / this.num_columns;
+        _results = [];
+        for (j = _i = 0, _ref = this.num_rows; 0 <= _ref ? _i < _ref : _i > _ref; j = 0 <= _ref ? ++_i : --_i) {
+          _results.push((function() {
+            var _j, _ref1, _results1;
+            _results1 = [];
+            for (k = _j = 0, _ref1 = this.num_columns; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; k = 0 <= _ref1 ? ++_j : --_j) {
+              _results1.push(this.createRaphaelCell(paper, j, k, grid_cell_height, grid_cell_width));
+            }
+            return _results1;
+          }).call(this));
+        }
+        return _results;
+      };
+
+      World.prototype.createRaphaelCell = function(paper, row, column, height, width) {
+        var cell, world;
+        cell = paper.rect(column * width, row * height, width, height);
         cell.node.id = "cell_" + row + "_" + column;
+        world = this;
         return cell.attr({
           stroke: "#d8d8d8"
         }).data("row", row).data("column", column).click(function() {
           var cell_data;
           cell_data = world.grid[this.data("row")][this.data("column")];
           cell_data.alive = !cell_data.alive;
-          return this.colorCell(this, cell_data.alive);
+          return world.colorCell(this, cell_data.alive);
         });
       };
 
