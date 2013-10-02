@@ -4,9 +4,6 @@ Toshiro Ken Sugihara 2013
 
 $ ->
 
-  tick_interval = 50
-  paused = false
-
   class World
 
     constructor: (num_rows, num_columns, canvas_height, canvas_width, alive_color) ->
@@ -90,33 +87,38 @@ $ ->
       for j in [0...@grid.length]
         arr = []
         for k in [0...@grid[j].length]
-          arr.push calculateIfCellAlive(j, k)
+          arr.push @calculateIfCellAlive(j, k)
         next_gen_grid.push arr
 
       next_gen_grid
 
-  calculateIfCellAlive = (row, column) ->
-
-    wrapped = (point, dimension_size) ->
-      switch
-        when (point < 0) then dimension_size - 1
-        when (point >= dimension_size) then 0
-        else point
-
-    countNeighbors = ->
+    countNeighbors: (row, column) ->
       count = 0
       rel_positions = [-1, 0, 1]
+
+      wrapped = (point, dimension_size) ->
+        switch
+          when (point < 0) then dimension_size - 1
+          when (point >= dimension_size) then 0
+          else point
 
       for row_position in rel_positions
         for column_position in rel_positions
           unless row_position is 0 and column_position is 0
-            cell_row = wrapped(row + row_position, world.num_rows)
-            cell_column = wrapped(column + column_position, world.num_columns)
-            count += (if world.grid[cell_row][cell_column].alive then 1 else 0)
+            cell_row = wrapped(row + row_position, @num_rows)
+            cell_column = wrapped(column + column_position, @num_columns)
+            count += (if @grid[cell_row][cell_column].alive then 1 else 0)
       count
 
-    count = countNeighbors()
-    if world.grid[row][column].alive then (2 <= count <= 3) else (count == 3)
+    calculateIfCellAlive: (row, column) ->
+
+      count = @countNeighbors(row, column)
+      if @grid[row][column].alive then (2 <= count <= 3) else (count == 3)
+
+  ### Main ###
+
+  tick_interval = 50
+  paused = false
 
   setPauseListener = ->
     $(window).keydown (event) ->
@@ -126,8 +128,6 @@ $ ->
           run()
         else
           paused = !paused
-
-  ### Main ###
 
   setPauseListener()
 

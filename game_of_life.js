@@ -6,9 +6,7 @@ Toshiro Ken Sugihara 2013
 
 (function() {
   $(function() {
-    var World, calculateIfCellAlive, paused, run, setPauseListener, tick_interval, world;
-    tick_interval = 50;
-    paused = false;
+    var World, paused, run, setPauseListener, tick_interval, world;
     World = (function() {
       function World(num_rows, num_columns, canvas_height, canvas_width, alive_color) {
         this.num_rows = num_rows;
@@ -144,52 +142,58 @@ Toshiro Ken Sugihara 2013
         for (j = _i = 0, _ref = this.grid.length; 0 <= _ref ? _i < _ref : _i > _ref; j = 0 <= _ref ? ++_i : --_i) {
           arr = [];
           for (k = _j = 0, _ref1 = this.grid[j].length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; k = 0 <= _ref1 ? ++_j : --_j) {
-            arr.push(calculateIfCellAlive(j, k));
+            arr.push(this.calculateIfCellAlive(j, k));
           }
           next_gen_grid.push(arr);
         }
         return next_gen_grid;
       };
 
-      return World;
-
-    })();
-    calculateIfCellAlive = function(row, column) {
-      var count, countNeighbors, wrapped;
-      wrapped = function(point, dimension_size) {
-        switch (false) {
-          case !(point < 0):
-            return dimension_size - 1;
-          case !(point >= dimension_size):
-            return 0;
-          default:
-            return point;
-        }
-      };
-      countNeighbors = function() {
-        var cell_column, cell_row, column_position, count, rel_positions, row_position, _i, _j, _len, _len1;
+      World.prototype.countNeighbors = function(row, column) {
+        var cell_column, cell_row, column_position, count, rel_positions, row_position, wrapped, _i, _j, _len, _len1;
         count = 0;
         rel_positions = [-1, 0, 1];
+        wrapped = function(point, dimension_size) {
+          switch (false) {
+            case !(point < 0):
+              return dimension_size - 1;
+            case !(point >= dimension_size):
+              return 0;
+            default:
+              return point;
+          }
+        };
         for (_i = 0, _len = rel_positions.length; _i < _len; _i++) {
           row_position = rel_positions[_i];
           for (_j = 0, _len1 = rel_positions.length; _j < _len1; _j++) {
             column_position = rel_positions[_j];
             if (!(row_position === 0 && column_position === 0)) {
-              cell_row = wrapped(row + row_position, world.num_rows);
-              cell_column = wrapped(column + column_position, world.num_columns);
-              count += (world.grid[cell_row][cell_column].alive ? 1 : 0);
+              cell_row = wrapped(row + row_position, this.num_rows);
+              cell_column = wrapped(column + column_position, this.num_columns);
+              count += (this.grid[cell_row][cell_column].alive ? 1 : 0);
             }
           }
         }
         return count;
       };
-      count = countNeighbors();
-      if (world.grid[row][column].alive) {
-        return (2 <= count && count <= 3);
-      } else {
-        return count === 3;
-      }
-    };
+
+      World.prototype.calculateIfCellAlive = function(row, column) {
+        var count;
+        count = this.countNeighbors(row, column);
+        if (this.grid[row][column].alive) {
+          return (2 <= count && count <= 3);
+        } else {
+          return count === 3;
+        }
+      };
+
+      return World;
+
+    })();
+    /* Main*/
+
+    tick_interval = 50;
+    paused = false;
     setPauseListener = function() {
       return $(window).keydown(function(event) {
         if (event.keyCode === 80) {
@@ -202,8 +206,6 @@ Toshiro Ken Sugihara 2013
         }
       });
     };
-    /* Main*/
-
     setPauseListener();
     world = new World(30, 48, 300, 480, "#50c0a8");
     world.populate();
