@@ -110,10 +110,10 @@ Toshiro Ken Sugihara 2013
             var _j, _ref1, _results1;
             _results1 = [];
             for (k = _j = 0, _ref1 = results_grid[j].length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; k = 0 <= _ref1 ? ++_j : --_j) {
-              _results1.push(world.grid[j][k].alive = results_grid[j][k]);
+              _results1.push(this.grid[j][k].alive = results_grid[j][k]);
             }
             return _results1;
-          })());
+          }).call(this));
         }
         return _results;
       };

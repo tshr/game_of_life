@@ -59,7 +59,7 @@ $ ->
       for j in [0...results_grid.length]
         arr = []
         for k in [0...results_grid[j].length]
-          world.grid[j][k].alive = results_grid[j][k]
+          @grid[j][k].alive = results_grid[j][k]
 
     populate: ->
 
