@@ -39,17 +39,14 @@ $ ->
         for k in [0...@num_columns]
           createCell(paper, j, k, grid_cell_height, grid_cell_width, @)
 
-    getCellByCoord: (row, column) ->
-      cell_id_string = "cell_" + row + "_" + column
-      $("#" + cell_id_string)
-
     colorCell: (cell, alive) ->
       if alive then cell.attr fill: @alive_color else cell.attr fill: "#ffffff"
 
     draw: ->
       for j in [0...@num_rows]
         for k in [0...@num_columns]
-          cell = @getCellByCoord(j, k)
+          cell_id_string = "cell_" + j + "_" + k
+          cell = $("#" + cell_id_string)
           @colorCell(cell, @grid[j][k].alive)
 
     updateGrid: (results_grid) ->

@@ -64,12 +64,6 @@ Toshiro Ken Sugihara 2013
         return _results;
       };
 
-      World.prototype.getCellByCoord = function(row, column) {
-        var cell_id_string;
-        cell_id_string = "cell_" + row + "_" + column;
-        return $("#" + cell_id_string);
-      };
-
       World.prototype.colorCell = function(cell, alive) {
         if (alive) {
           return cell.attr({
@@ -83,14 +77,15 @@ Toshiro Ken Sugihara 2013
       };
 
       World.prototype.draw = function() {
-        var cell, j, k, _i, _ref, _results;
+        var cell, cell_id_string, j, k, _i, _ref, _results;
         _results = [];
         for (j = _i = 0, _ref = this.num_rows; 0 <= _ref ? _i < _ref : _i > _ref; j = 0 <= _ref ? ++_i : --_i) {
           _results.push((function() {
             var _j, _ref1, _results1;
             _results1 = [];
             for (k = _j = 0, _ref1 = this.num_columns; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; k = 0 <= _ref1 ? ++_j : --_j) {
-              cell = this.getCellByCoord(j, k);
+              cell_id_string = "cell_" + j + "_" + k;
+              cell = $("#" + cell_id_string);
               _results1.push(this.colorCell(cell, this.grid[j][k].alive));
             }
             return _results1;
