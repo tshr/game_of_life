@@ -46,17 +46,14 @@ $ ->
       cell_id_string = "cell_" + row + "_" + column
       $("#" + cell_id_string)
 
-    drawCell: (row, column, alive) ->
-      cell = @getCellByCoord(row, column)
-      @colorCell(cell, alive)
-
     colorCell: (cell, alive) ->
       if alive then cell.attr fill: @alive_color else cell.attr fill: "#ffffff"
 
     draw: ->
       for j in [0...@num_rows]
         for k in [0...@num_columns]
-          @drawCell(j, k, world.grid[j][k].alive)
+          cell = @getCellByCoord(j, k)
+          @colorCell(cell, @grid[j][k].alive)
 
     updateGrid: (results_grid) ->
       for j in [0...results_grid.length]
