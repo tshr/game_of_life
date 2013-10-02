@@ -6,7 +6,7 @@ Toshiro Ken Sugihara 2013
 
 (function() {
   $(function() {
-    var World, calculateIfCellAlive, getNextGenerationCellStates, paused, run, setPauseListener, tick_interval, world;
+    var World, calculateIfCellAlive, paused, run, setPauseListener, tick_interval, world;
     tick_interval = 50;
     paused = false;
     World = (function() {
@@ -135,7 +135,20 @@ Toshiro Ken Sugihara 2013
 
       World.prototype.update = function() {
         this.draw();
-        return this.updateGrid(getNextGenerationCellStates());
+        return this.updateGrid(this.getNextGenerationCellStates());
+      };
+
+      World.prototype.getNextGenerationCellStates = function() {
+        var arr, j, k, next_gen_grid, _i, _j, _ref, _ref1;
+        next_gen_grid = [];
+        for (j = _i = 0, _ref = this.grid.length; 0 <= _ref ? _i < _ref : _i > _ref; j = 0 <= _ref ? ++_i : --_i) {
+          arr = [];
+          for (k = _j = 0, _ref1 = this.grid[j].length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; k = 0 <= _ref1 ? ++_j : --_j) {
+            arr.push(calculateIfCellAlive(j, k));
+          }
+          next_gen_grid.push(arr);
+        }
+        return next_gen_grid;
       };
 
       return World;
@@ -176,18 +189,6 @@ Toshiro Ken Sugihara 2013
       } else {
         return count === 3;
       }
-    };
-    getNextGenerationCellStates = function() {
-      var arr, j, k, next_gen_grid, _i, _j, _ref, _ref1;
-      next_gen_grid = [];
-      for (j = _i = 0, _ref = world.grid.length; 0 <= _ref ? _i < _ref : _i > _ref; j = 0 <= _ref ? ++_i : --_i) {
-        arr = [];
-        for (k = _j = 0, _ref1 = world.grid[j].length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; k = 0 <= _ref1 ? ++_j : --_j) {
-          arr.push(calculateIfCellAlive(j, k));
-        }
-        next_gen_grid.push(arr);
-      }
-      return next_gen_grid;
     };
     setPauseListener = function() {
       return $(window).keydown(function(event) {

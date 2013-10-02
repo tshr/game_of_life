@@ -81,7 +81,19 @@ $ ->
 
     update: ->
       @draw()
-      @updateGrid(getNextGenerationCellStates())
+      @updateGrid(@getNextGenerationCellStates())
+
+    getNextGenerationCellStates: ->
+
+      next_gen_grid = []
+
+      for j in [0...@grid.length]
+        arr = []
+        for k in [0...@grid[j].length]
+          arr.push calculateIfCellAlive(j, k)
+        next_gen_grid.push arr
+
+      next_gen_grid
 
   calculateIfCellAlive = (row, column) ->
 
@@ -105,18 +117,6 @@ $ ->
 
     count = countNeighbors()
     if world.grid[row][column].alive then (2 <= count <= 3) else (count == 3)
-
-  getNextGenerationCellStates = ->
-
-    next_gen_grid = []
-
-    for j in [0...world.grid.length]
-      arr = []
-      for k in [0...world.grid[j].length]
-        arr.push calculateIfCellAlive(j, k)
-      next_gen_grid.push arr
-
-    next_gen_grid
 
   setPauseListener = ->
     $(window).keydown (event) ->
