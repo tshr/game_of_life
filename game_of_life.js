@@ -6,7 +6,7 @@ Toshiro Ken Sugihara 2013
 
 (function() {
   $(function() {
-    var World, calculateIfCellAlive, getNextGenerationCellStates, paused, populateWorld, runWorld, setPauseListener, tick_interval, updateWorld, world;
+    var World, calculateIfCellAlive, getNextGenerationCellStates, paused, runWorld, setPauseListener, tick_interval, updateWorld, world;
     tick_interval = 50;
     paused = false;
     World = (function() {
@@ -123,23 +123,24 @@ Toshiro Ken Sugihara 2013
         return _results;
       };
 
+      World.prototype.populate = function() {
+        this.grid[0][8].alive = true;
+        this.grid[1][9].alive = true;
+        this.grid[2][9].alive = true;
+        this.grid[2][8].alive = true;
+        this.grid[2][7].alive = true;
+        this.grid[13][22].alive = true;
+        this.grid[14][21].alive = true;
+        this.grid[14][23].alive = true;
+        this.grid[15][21].alive = true;
+        this.grid[15][23].alive = true;
+        this.grid[16][22].alive = true;
+        return this.grid[16][23].alive = true;
+      };
+
       return World;
 
     })();
-    populateWorld = function() {
-      world.grid[0][8].alive = true;
-      world.grid[1][9].alive = true;
-      world.grid[2][9].alive = true;
-      world.grid[2][8].alive = true;
-      world.grid[2][7].alive = true;
-      world.grid[13][22].alive = true;
-      world.grid[14][21].alive = true;
-      world.grid[14][23].alive = true;
-      world.grid[15][21].alive = true;
-      world.grid[15][23].alive = true;
-      world.grid[16][22].alive = true;
-      return world.grid[16][23].alive = true;
-    };
     calculateIfCellAlive = function(row, column) {
       var count, countNeighbors, wrapped;
       wrapped = function(point, dimension_size) {
@@ -208,7 +209,7 @@ Toshiro Ken Sugihara 2013
 
     setPauseListener();
     world = new World(30, 48, 300, 480, "#50c0a8");
-    populateWorld();
+    world.populate();
     return (runWorld = function() {
       updateWorld();
       if (!paused) {

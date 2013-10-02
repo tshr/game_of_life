@@ -64,23 +64,23 @@ $ ->
         for k in [0...results_grid[j].length]
           world.grid[j][k].alive = results_grid[j][k]
 
-  populateWorld = ->
+    populate: ->
 
-    #GLIDER
-    world.grid[0][8].alive = true
-    world.grid[1][9].alive = true
-    world.grid[2][9].alive = true
-    world.grid[2][8].alive = true
-    world.grid[2][7].alive = true
+      #GLIDER
+      @grid[0][8].alive = true
+      @grid[1][9].alive = true
+      @grid[2][9].alive = true
+      @grid[2][8].alive = true
+      @grid[2][7].alive = true
 
-    #BEEHIVES
-    world.grid[13][22].alive = true
-    world.grid[14][21].alive = true
-    world.grid[14][23].alive = true
-    world.grid[15][21].alive = true
-    world.grid[15][23].alive = true
-    world.grid[16][22].alive = true
-    world.grid[16][23].alive = true
+      #BEEHIVES
+      @grid[13][22].alive = true
+      @grid[14][21].alive = true
+      @grid[14][23].alive = true
+      @grid[15][21].alive = true
+      @grid[15][23].alive = true
+      @grid[16][22].alive = true
+      @grid[16][23].alive = true
 
   calculateIfCellAlive = (row, column) ->
 
@@ -135,7 +135,7 @@ $ ->
   setPauseListener()
 
   world = new World(30, 48, 300, 480, "#50c0a8")
-  populateWorld()
+  world.populate()
 
   do runWorld = ->
     updateWorld()
