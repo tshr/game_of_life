@@ -58,24 +58,6 @@ $ ->
         for k in [0...results_grid[j].length]
           @grid[j][k].alive = results_grid[j][k]
 
-    populate: ->
-
-      #GLIDER
-      @grid[0][8].alive = true
-      @grid[1][9].alive = true
-      @grid[2][9].alive = true
-      @grid[2][8].alive = true
-      @grid[2][7].alive = true
-
-      #BEEHIVES
-      @grid[13][22].alive = true
-      @grid[14][21].alive = true
-      @grid[14][23].alive = true
-      @grid[15][21].alive = true
-      @grid[15][23].alive = true
-      @grid[16][22].alive = true
-      @grid[16][23].alive = true
-
     update: ->
       @draw()
       @updateGrid(@getNextGenerationCellStates())
@@ -114,6 +96,24 @@ $ ->
 
       count = @countNeighbors(row, column)
       if @grid[row][column].alive then (2 <= count <= 3) else (count == 3)
+
+    populate: ->
+
+      #GLIDER
+      @grid[0][8].alive = true
+      @grid[1][9].alive = true
+      @grid[2][9].alive = true
+      @grid[2][8].alive = true
+      @grid[2][7].alive = true
+
+      #BEEHIVES
+      @grid[13][22].alive = true
+      @grid[14][21].alive = true
+      @grid[14][23].alive = true
+      @grid[15][21].alive = true
+      @grid[15][23].alive = true
+      @grid[16][22].alive = true
+      @grid[16][23].alive = true
 
   ### Main ###
 

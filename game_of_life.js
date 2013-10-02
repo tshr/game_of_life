@@ -116,21 +116,6 @@ Toshiro Ken Sugihara 2013
         return _results;
       };
 
-      World.prototype.populate = function() {
-        this.grid[0][8].alive = true;
-        this.grid[1][9].alive = true;
-        this.grid[2][9].alive = true;
-        this.grid[2][8].alive = true;
-        this.grid[2][7].alive = true;
-        this.grid[13][22].alive = true;
-        this.grid[14][21].alive = true;
-        this.grid[14][23].alive = true;
-        this.grid[15][21].alive = true;
-        this.grid[15][23].alive = true;
-        this.grid[16][22].alive = true;
-        return this.grid[16][23].alive = true;
-      };
-
       World.prototype.update = function() {
         this.draw();
         return this.updateGrid(this.getNextGenerationCellStates());
@@ -185,6 +170,21 @@ Toshiro Ken Sugihara 2013
         } else {
           return count === 3;
         }
+      };
+
+      World.prototype.populate = function() {
+        this.grid[0][8].alive = true;
+        this.grid[1][9].alive = true;
+        this.grid[2][9].alive = true;
+        this.grid[2][8].alive = true;
+        this.grid[2][7].alive = true;
+        this.grid[13][22].alive = true;
+        this.grid[14][21].alive = true;
+        this.grid[14][23].alive = true;
+        this.grid[15][21].alive = true;
+        this.grid[15][23].alive = true;
+        this.grid[16][22].alive = true;
+        return this.grid[16][23].alive = true;
       };
 
       return World;
