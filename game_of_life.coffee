@@ -82,6 +82,10 @@ $ ->
       @grid[16][22].alive = true
       @grid[16][23].alive = true
 
+    update: ->
+      @draw()
+      @updateGrid(getNextGenerationCellStates())
+
   calculateIfCellAlive = (row, column) ->
 
     wrapped = (point, dimension_size) ->
@@ -117,16 +121,12 @@ $ ->
 
     next_gen_grid
 
-  updateWorld = ->
-    world.draw()
-    world.updateGrid(getNextGenerationCellStates())
-
   setPauseListener = ->
     $(window).keydown (event) ->
       if event.keyCode is 80
         if paused
           paused = !paused
-          runWorld()
+          run()
         else
           paused = !paused
 
@@ -137,7 +137,7 @@ $ ->
   world = new World(30, 48, 300, 480, "#50c0a8")
   world.populate()
 
-  do runWorld = ->
-    updateWorld()
+  do run = ->
+    world.update()
     unless paused
-      setTimeout runWorld, tick_interval
+      setTimeout run, tick_interval

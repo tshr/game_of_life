@@ -6,7 +6,7 @@ Toshiro Ken Sugihara 2013
 
 (function() {
   $(function() {
-    var World, calculateIfCellAlive, getNextGenerationCellStates, paused, runWorld, setPauseListener, tick_interval, updateWorld, world;
+    var World, calculateIfCellAlive, getNextGenerationCellStates, paused, run, setPauseListener, tick_interval, world;
     tick_interval = 50;
     paused = false;
     World = (function() {
@@ -138,6 +138,11 @@ Toshiro Ken Sugihara 2013
         return this.grid[16][23].alive = true;
       };
 
+      World.prototype.update = function() {
+        this.draw();
+        return this.updateGrid(getNextGenerationCellStates());
+      };
+
       return World;
 
     })();
@@ -189,16 +194,12 @@ Toshiro Ken Sugihara 2013
       }
       return next_gen_grid;
     };
-    updateWorld = function() {
-      world.draw();
-      return world.updateGrid(getNextGenerationCellStates());
-    };
     setPauseListener = function() {
       return $(window).keydown(function(event) {
         if (event.keyCode === 80) {
           if (paused) {
             paused = !paused;
-            return runWorld();
+            return run();
           } else {
             return paused = !paused;
           }
@@ -210,10 +211,10 @@ Toshiro Ken Sugihara 2013
     setPauseListener();
     world = new World(30, 48, 300, 480, "#50c0a8");
     world.populate();
-    return (runWorld = function() {
-      updateWorld();
+    return (run = function() {
+      world.update();
       if (!paused) {
-        return setTimeout(runWorld, tick_interval);
+        return setTimeout(run, tick_interval);
       }
     })();
   });
