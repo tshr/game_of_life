@@ -13,14 +13,14 @@ $ ->
       @alive_color = alive_color
       @grid = []
       @fillGrid()
-      @createCells(canvas_width, canvas_height)
+      @createCells canvas_width, canvas_height
 
     fillGrid: ->
       for i in [0...@num_rows]
         row = []
         for [0...@num_columns]
-          row.push({ alive : false })
-        @grid.push(row)
+          row.push { alive : false }
+        @grid.push row
 
     createCells: (canvas_width, canvas_height) ->
       paper = Raphael("canvas", canvas_width, canvas_height)
@@ -33,7 +33,7 @@ $ ->
         cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
           cell_data = world.grid[@data("row")][@data("column")]
           cell_data.alive = !cell_data.alive
-          world.colorCell(@, cell_data.alive)
+          world.colorCell @, cell_data.alive
 
       for j in [0...@num_rows]
         for k in [0...@num_columns]
@@ -47,7 +47,7 @@ $ ->
         for k in [0...@num_columns]
           cell_id_string = "cell_" + j + "_" + k
           cell = $("#" + cell_id_string)
-          @colorCell(cell, @grid[j][k].alive)
+          @colorCell cell, @grid[j][k].alive
 
     updateGrid: (results_grid) ->
       for j in [0...results_grid.length]
