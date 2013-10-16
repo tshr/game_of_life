@@ -71,21 +71,21 @@ $ ->
 
       next_gen_grid
 
+    wrapped: (point, dimension_size) ->
+      switch
+        when (point < 0) then dimension_size - 1
+        when (point >= dimension_size) then 0
+        else point
+
     countNeighbors: (row, column) ->
       count = 0
       rel_positions = [-1, 0, 1]
 
-      wrapped = (point, dimension_size) ->
-        switch
-          when (point < 0) then dimension_size - 1
-          when (point >= dimension_size) then 0
-          else point
-
       for row_position in rel_positions
         for column_position in rel_positions
           unless row_position is 0 and column_position is 0
-            cell_row = wrapped(row + row_position, @num_rows)
-            cell_column = wrapped(column + column_position, @num_columns)
+            cell_row = @wrapped(row + row_position, @num_rows)
+            cell_column = @wrapped(column + column_position, @num_columns)
             count += (if @grid[cell_row][cell_column].alive then 1 else 0)
       count
 
