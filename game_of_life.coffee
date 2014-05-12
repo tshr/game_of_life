@@ -121,10 +121,10 @@ $ ->
     $(window).keydown (event) ->
       if event.keyCode is 80
         if paused
-          paused = !paused
+          paused = false
           run()
         else
-          paused = !paused
+          paused = true
 
   setPauseListener()
 

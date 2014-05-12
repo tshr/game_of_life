@@ -194,10 +194,10 @@ Toshiro Ken Sugihara 2013
       return $(window).keydown(function(event) {
         if (event.keyCode === 80) {
           if (paused) {
-            paused = !paused;
+            paused = false;
             return run();
           } else {
-            return paused = !paused;
+            return paused = true;
           }
         }
       });
