@@ -6,54 +6,54 @@ $ ->
 
   class World
 
-    constructor: (num_rows, num_columns, canvas_height, canvas_width, alive_color) ->
+    constructor: (numRows, numColumns, canvasHeight, canvasWidth, aliveColor) ->
 
-      @num_rows = num_rows
-      @num_columns = num_columns
-      @alive_color = alive_color
+      @numRows = numRows
+      @numColumns = numColumns
+      @aliveColor = aliveColor
       @grid = []
       @fillGrid()
-      @createCells canvas_width, canvas_height
+      @createCells canvasWidth, canvasHeight
 
     fillGrid: ->
-      for i in [0...@num_rows]
+      for i in [0...@numRows]
         row = []
-        for [0...@num_columns]
+        for [0...@numColumns]
           row.push { alive : false }
         @grid.push row
 
-    createCells: (canvas_width, canvas_height) ->
-      paper = Raphael("canvas", canvas_width, canvas_height)
-      grid_cell_height = canvas_height / @num_rows
-      grid_cell_width = canvas_width / @num_columns
+    createCells: (canvasWidth, canvasHeight) ->
+      paper = Raphael("canvas", canvasWidth, canvasHeight)
+      gridCellHeight = canvasHeight / @numRows
+      gridCellWidth = canvasWidth / @numColumns
 
       createCell = (paper, row, column, height, width, world) ->
         cell = paper.rect(column * width, row * height, width, height)
         cell.node.id = "cell_" + row + "_" + column
         cell.attr(stroke: "#d8d8d8").data("row", row).data("column", column).click ->
-          cell_data = world.grid[@data("row")][@data("column")]
-          cell_data.alive = !cell_data.alive
-          world.colorCell @, cell_data.alive
+          cellData = world.grid[@data("row")][@data("column")]
+          cellData.alive = !cellData.alive
+          world.colorCell @, cellData.alive
 
-      for j in [0...@num_rows]
-        for k in [0...@num_columns]
-          createCell(paper, j, k, grid_cell_height, grid_cell_width, @)
+      for j in [0...@numRows]
+        for k in [0...@numColumns]
+          createCell(paper, j, k, gridCellHeight, gridCellWidth, @)
 
     colorCell: (cell, alive) ->
-      if alive then cell.attr fill: @alive_color else cell.attr fill: "#ffffff"
+      if alive then cell.attr fill: @aliveColor else cell.attr fill: "#ffffff"
 
     draw: ->
-      for j in [0...@num_rows]
-        for k in [0...@num_columns]
-          cell_id_string = "cell_" + j + "_" + k
-          cell = $("#" + cell_id_string)
+      for j in [0...@numRows]
+        for k in [0...@numColumns]
+          cellIdString = "cell_" + j + "_" + k
+          cell = $("#" + cellIdString)
           @colorCell cell, @grid[j][k].alive
 
-    updateGrid: (results_grid) ->
-      for j in [0...results_grid.length]
+    updateGrid: (resultsGrid) ->
+      for j in [0...resultsGrid.length]
         arr = []
-        for k in [0...results_grid[j].length]
-          @grid[j][k].alive = results_grid[j][k]
+        for k in [0...resultsGrid[j].length]
+          @grid[j][k].alive = resultsGrid[j][k]
 
     update: ->
       @draw()
@@ -61,32 +61,32 @@ $ ->
 
     getNextGenerationCellStates: ->
 
-      next_gen_grid = []
+      nextGenGrid = []
 
       for j in [0...@grid.length]
         arr = []
         for k in [0...@grid[j].length]
           arr.push @calculateIfCellAlive(j, k)
-        next_gen_grid.push arr
+        nextGenGrid.push arr
 
-      next_gen_grid
+      nextGenGrid
 
-    wrapped: (point, dimension_size) ->
+    wrapped: (point, dimensionSize) ->
       switch
-        when (point < 0) then dimension_size - 1
-        when (point >= dimension_size) then 0
+        when (point < 0) then dimensionSize - 1
+        when (point >= dimensionSize) then 0
         else point
 
     countNeighbors: (row, column) ->
       count = 0
-      rel_positions = [-1, 0, 1]
+      relPositions = [-1, 0, 1]
 
-      for row_position in rel_positions
-        for column_position in rel_positions
-          unless row_position is 0 and column_position is 0
-            cell_row = @wrapped(row + row_position, @num_rows)
-            cell_column = @wrapped(column + column_position, @num_columns)
-            count += (if @grid[cell_row][cell_column].alive then 1 else 0)
+      for rowPosition in relPositions
+        for columnPosition in relPositions
+          unless rowPosition is 0 and columnPosition is 0
+            cellRow = @wrapped(row + rowPosition, @numRows)
+            cellColumn = @wrapped(column + columnPosition, @numColumns)
+            count += (if @grid[cellRow][cellColumn].alive then 1 else 0)
       count
 
     calculateIfCellAlive: (row, column) ->
@@ -114,7 +114,7 @@ $ ->
 
   ### Main ###
 
-  tick_interval = 50
+  tickInterval = 50
   paused = false
 
   setPauseListener = ->
@@ -134,4 +134,4 @@ $ ->
   do run = ->
     world.update()
     unless paused
-      setTimeout run, tick_interval
+      setTimeout run, tickInterval
